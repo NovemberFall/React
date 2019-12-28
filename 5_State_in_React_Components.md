@@ -188,5 +188,8 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
 ```
+- output: 3 results depend on the condition
+---
+
+
