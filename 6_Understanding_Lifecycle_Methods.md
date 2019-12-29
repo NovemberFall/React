@@ -464,3 +464,204 @@ export default SeasonDisplay;
 ![](img/2019-12-28-16-14-32.png)
 - let's change to Southern Hemisphere
 ![](img/2019-12-28-16-21-03.png)
+---
+
+## Showing a Loading Spinner
+- create a `Spinner.js`
+```js
+import React from 'react';
+
+const Spinner = () => {
+    return (
+        // using Semantic UI
+        <div className="ui active dimmer"> 
+            <div className="ui big text loader">
+                Loading...
+            </div>
+        </div>
+    );
+};
+export default Spinner;
+```
+-
+- inside index.js, import Spinner
+```js
+//Determining Season
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner';
+
+class App extends React.Component {
+    state = { lat: null, errorMessage: '' };//dont need to `this.state =`
+
+    //life cycle function
+    componentDidMount() {
+        window.navigator.geolocation.getCurrentPosition(
+            (position) => { this.setState({ lat: position.coords.latitude }); },
+            (err) => { this.setState({ errorMessage: err.message }); }
+        );
+    }
+
+    render() {
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>
+        }
+
+        if (!this.state.errorMessage && this.state.lat) {
+            return <SeasonDisplay lat={this.state.lat} />
+        }
+
+        return <Spinner />; //import Spinner
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+![](img/2019-12-28-16-47-36.png)
+---
+
+## Specifying Default Props
+- in idnex.js
+- `return <div>Loading!</div>`, is hard code
+- so we try to pass props from index to Spinner
+- 
+- Spinner.js
+```js
+const Spinner = (props) => {
+    return (
+        // using Semantic UI
+        <div className="ui active dimmer">
+            <div className="ui big text loader">
+                {props.message}
+            </div>
+        </div>
+    );
+};
+```
+-
+- index.js
+```js
+    render() {
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>
+        }
+
+        if (!this.state.errorMessage && this.state.lat) {
+            return <SeasonDisplay lat={this.state.lat} />
+        }
+
+        return <Spinner message="Please accept locaiton request" />
+    }
+```
+![](img/2019-12-28-16-57-53.png)
+---
+
+## Specifying Default Props (Part B)
+- or if index don't pass value to props, to Spinner
+- index.js
+```js
+    render() {
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>
+        }
+        if (!this.state.errorMessage && this.state.lat) {
+            return <SeasonDisplay lat={this.state.lat} />
+        }
+
+        return <Spinner />
+    }
+```
+- Spinner.js
+```js
+const Spinner = (props) => {
+    return (
+        // using Semantic UI
+        <div className="ui active dimmer">
+            <div className="ui big text loader">
+                {/* {props.message} */}
+                {props.message || 'Hello World!'}
+            </div>
+        </div>
+    );
+};
+```
+- since parent `index` didn't pass any message to child `Spinner`, so message is null means false
+- but there is still ` {props.message || 'Hello World!'}`
+- so it print `Hello World`
+![](img/2019-12-28-17-05-33.png)
+- now we also can use `Spinner.defaultProps`
+- update Spinner
+```js
+//Specifying Default Props
+import React from 'react';
+const Spinner = (props) => {
+    return (
+        // using Semantic UI
+        <div className="ui active dimmer">
+            <div className="ui big text loader">
+                {props.message}
+                {/* {props.message || 'Hello World!'} */}
+            </div>
+        </div>
+    );
+};
+Spinner.defaultProps = {
+    // message: 'Loading...'
+    message: 'Loading...'
+};
+export default Spinner;
+```
+![](img/2019-12-28-17-07-09.png)
+---
+
+## Avoiding Conditionals in Render
+- To avoid conditionals in Render
+- we create a hlper function in index.js's render() 
+- to do so:
+```js
+//Avoiding Conditionals in Render
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner';
+
+class App extends React.Component {
+    state = { lat: null, errorMessage: '' };//dont need to `this.state =`
+
+    //life cycle function
+    componentDidMount() {
+        window.navigator.geolocation.getCurrentPosition(
+            (position) => { this.setState({ lat: position.coords.latitude }); },
+            (err) => { this.setState({ errorMessage: err.message }); }
+        );
+    }
+
+    //helper function
+    renderContent() {
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>
+        }
+
+        if (!this.state.errorMessage && this.state.lat) {
+            return <SeasonDisplay lat={this.state.lat} />
+        }
+
+        return <Spinner message="Please accept locaiton request" />
+        // return <Spinner />
+    }
+
+    render() {
+        return (
+            <div className="border red">
+                {this.renderContent()}
+            </div>
+        );
+    }
+}
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+- remember: we don't have `<div className="border red">` in render()
+---
+
+## Breather and Review

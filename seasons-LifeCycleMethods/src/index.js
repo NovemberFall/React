@@ -132,10 +132,134 @@
 
 
 
-//Determining Season
+// //Determining Season
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import SeasonDisplay from './SeasonDisplay';
+
+// class App extends React.Component {
+//     state = { lat: null, errorMessage: '' };//dont need to `this.state =`
+
+//     //life cycle function
+//     componentDidMount() {
+//         window.navigator.geolocation.getCurrentPosition(
+//             (position) => { this.setState({ lat: position.coords.latitude }); },
+//             (err) => { this.setState({ errorMessage: err.message }); }
+//         );
+//     }
+
+//     render() {
+//         if (this.state.errorMessage && !this.state.lat) {
+//             return <div>Error: {this.state.errorMessage}</div>
+//         }
+
+//         if (!this.state.errorMessage && this.state.lat) {
+//             return <SeasonDisplay lat={this.state.lat} />
+//         }
+
+//         return <div>Loading!</div>
+//     }
+// }
+
+// ReactDOM.render(<App />, document.getElementById('root'));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //Specifying Default Props
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import SeasonDisplay from './SeasonDisplay';
+// import Spinner from './Spinner';
+
+// class App extends React.Component {
+//     state = { lat: null, errorMessage: '' };//dont need to `this.state =`
+
+//     //life cycle function
+//     componentDidMount() {
+//         window.navigator.geolocation.getCurrentPosition(
+//             (position) => { this.setState({ lat: position.coords.latitude }); },
+//             (err) => { this.setState({ errorMessage: err.message }); }
+//         );
+//     }
+
+//     render() {
+//         if (this.state.errorMessage && !this.state.lat) {
+//             return <div>Error: {this.state.errorMessage}</div>
+//         }
+
+//         if (!this.state.errorMessage && this.state.lat) {
+//             return <SeasonDisplay lat={this.state.lat} />
+//         }
+
+//         return <Spinner message="Please accept locaiton request" />
+//         // return <Spinner />
+//     }
+// }
+
+// ReactDOM.render(<App />, document.getElementById('root'));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Avoiding Conditionals in Render
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner';
 
 class App extends React.Component {
     state = { lat: null, errorMessage: '' };//dont need to `this.state =`
@@ -148,7 +272,8 @@ class App extends React.Component {
         );
     }
 
-    render() {
+    //helper function
+    renderContent() {
         if (this.state.errorMessage && !this.state.lat) {
             return <div>Error: {this.state.errorMessage}</div>
         }
@@ -157,7 +282,16 @@ class App extends React.Component {
             return <SeasonDisplay lat={this.state.lat} />
         }
 
-        return <div>Loading!</div>
+        return <Spinner message="Please accept locaiton request" />
+        // return <Spinner />
+    }
+
+    render() {
+        return (
+            <div className="border red">
+                {this.renderContent()}
+            </div>
+        );
     }
 }
 
