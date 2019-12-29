@@ -46,6 +46,9 @@ export default SeasonDisplay;
 ```
 ![](img/2019-12-27-00-47-41.png)
 - if we can get the geolocation, can set like the above 
+- but how to open `Sensors` ?
+    1. `Press Command+Shift+P (Mac)`
+    2. `Type sensors, select Show Sensors`
 ---
 
 ## change to class
