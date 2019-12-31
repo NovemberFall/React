@@ -199,6 +199,9 @@ class ImageCard extends React.Component {
 export default ImageCard;
 ```
 ![](img/2019-12-31-11-39-43.png)
+---
+
+## dynamic Spans
 
 
 
