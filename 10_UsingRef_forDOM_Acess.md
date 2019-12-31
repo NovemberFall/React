@@ -128,4 +128,78 @@ export default ImageCard;
 ---
 
 
+## Accessing the DOM with Refs
+![](img/2019-12-30-22-38-34.png)
+![](img/2019-12-30-22-43-15.png)
+- update ImageCard
+```js
+//Accessing the DOM with Refs
+import React from 'react';
+class ImageCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.imageRef = React.createRef();
+    }
+
+    componentDidMount() {//组件被挂载到页面之后，自动被执行
+        console.log(this.imageRef);
+        console.log(this.imageRef.current.clientHeight);
+    }
+
+    render() {
+        const { description, urls } = this.props.image;
+        return (
+            <div>
+                <img
+                    ref={this.imageRef}
+                    alt={description}
+                    src={urls.regular}
+                />
+            </div>
+        );
+    }
+}
+export default ImageCard;
+```
+![](img/2019-12-31-10-25-22.png)
+---
+
+## Callbacks on Image Load
+- update
+```js
+//Callbacks on Image Load
+import React from 'react';
+class ImageCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.imageRef = React.createRef();
+    }
+
+    componentDidMount() {//组件被挂载到页面之后，自动被执行
+        this.imageRef.current.addEventListener('load', this.setSpans);
+    }
+
+    setSpans = () => {
+        console.log(this.imageRef.current.clientHeight);
+    };
+
+    render() {
+        const { description, urls } = this.props.image;
+        return (
+            <div>
+                <img
+                    ref={this.imageRef}
+                    alt={description}
+                    src={urls.regular}
+                />
+            </div>
+        );
+    }
+}
+export default ImageCard;
+```
+![](img/2019-12-31-11-39-43.png)
+
+
+
 
