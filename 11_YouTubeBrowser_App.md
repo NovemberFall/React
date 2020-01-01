@@ -190,4 +190,6 @@ export default SearchBar;
 - pass current copied key into `youtube.js`
 ---
 
-## 
+## Searching for Videos
+- google search `youtube api search`
+- 
