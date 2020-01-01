@@ -350,7 +350,145 @@ class App extends React.Component {
 }
 ```
 ![](img/2020-01-01-12-52-07.png)
+- note: the `items` is an array(5)
+- 
+- update App
+```js
+class App extends React.Component {
+    state = { videos: [] };
+
+    onTermSubmit = async (term) => {
+        const response = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+        // console.log(response);
+        this.setState({ videos: response.data.items });
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+                I have {this.state.videos.length} videos.
+            </div>
+        );
+    }
+}
+```
+![](img/2020-01-01-12-57-30.png)
+![](img/2020-01-01-12-57-49.png)
+![](img/2020-01-01-12-58-43.png)
+---
+
+## Passing State as Props
+- now let's review the plan agian:
+![](img/2020-01-01-13-37-49.png)
+![](img/2020-01-01-13-38-49.png)
+- create VideoList.js
+```js
+import React from 'react';
+
+const VideoList = (props) => {
+    //props.videos
+    return <div>{props.videos.length}</div>;
+}
+export default VideoList;
+```
+-
+- update App
+```js
+//Passing State as Props
+import React from 'react';
+import SearchBar from './SearchBar';
+import youtube from '../apis/youtube';
+import VideoList from './VideoList';
+
+class App extends React.Component {
+    state = { videos: [] };
+
+    onTermSubmit = async (term) => {
+        const response = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+        // console.log(response);
+        this.setState({ videos: response.data.items });
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+                <VideoList videos={this.state.videos} />
+            </div>
+        );
+    }
+}
+export default App;
+```
+![](img/2020-01-01-13-46-43.png)
+---
 
 
+## Rendering a List of Videos
+- update VideoList
+```js
+//Rendering a List of Videos
+import React from 'react';
 
+const VideoList = ({ videos }) => {
+    //props.videos
+    return <div>{videos.length}</div>;
+}
+export default VideoList;
+```
+-
+- create VideoItem.js
+```js
+import React from 'react';
 
+const VideoItem = (props) => {
+    return <div>Video Item</div>;
+};
+export default VideoItem;
+```
+- for every video inside VideoList there we will render one signle video item component
+- update VideoList.js
+```js
+//Rendering a List of Videos
+import React from 'react';
+import VideoItem from './VideoItem';
+
+const VideoList = ({ videos }) => {
+    const renderedList = videos.map((video) => {
+        return <VideoItem />;
+    });
+    //props.videos
+    return <div>{renderedList}</div>;
+}
+export default VideoList;
+```
+![](img/2020-01-01-13-58-30.png)
+- there is warnning
+---
+
+## Rendering Video Thumbnails
+- we can pass props from VideoList to VideoItem
+- update VideoList.js
+```js
+
+```
+![](img/2020-01-01-14-05-38.png)
+- update VideoItem.js
+```js
+//Rendering Video Thumbnails
+import React from 'react';
+
+const VideoItem = ({ video }) => {
+    return <div>{video.snippet.title}</div>;
+};
+export default VideoItem;
+```
