@@ -430,10 +430,12 @@ class App extends React.Component {
 export default App;
 ```
 ![](img/2020-01-01-13-46-43.png)
+- Note: we pass props ` <VideoList videos={this.state.videos} />`  to child `VideoList`
 ---
 
 
 ## Rendering a List of Videos
+- ` <VideoList videos={this.state.videos} />`, we receive props from parent `App`
 - update VideoList
 ```js
 //Rendering a List of Videos
@@ -479,8 +481,20 @@ export default VideoList;
 - we can pass props from VideoList to VideoItem
 - update VideoList.js
 ```js
+//Rendering Video Thumbnails
+import React from 'react';
+import VideoItem from './VideoItem';
 
+const VideoList = ({ videos }) => {
+    const renderedList = videos.map((video) => {
+        return <VideoItem video={video} />;
+    });
+    //props.videos
+    return <div>{renderedList}</div>;
+}
+export default VideoList;
 ```
+- note: we pass props `video` to child `VideoItem`
 ![](img/2020-01-01-14-05-38.png)
 - update VideoItem.js
 ```js
@@ -492,3 +506,97 @@ const VideoItem = ({ video }) => {
 };
 export default VideoItem;
 ```
+![](img/2020-01-01-14-26-26.png)
+- but we need to print `thumbnail`
+![](img/2020-01-01-14-30-40.png)
+- update VideoItem
+```js
+
+//Rendering Video Thumbnails
+import React from 'react';
+
+const VideoItem = ({ video }) => {
+    return (
+        <div>
+            <img src={video.snippet.thumbnails.medium.url} />
+            {video.snippet.title}
+        </div>
+    );
+};
+export default VideoItem;
+```
+![](img/2020-01-01-14-34-19.png)
+---
+
+## Styling a List
+![](img/2020-01-01-14-36-27.png)
+- go to semantic-UI
+- view `List`, to copy the example's source code
+- update VideoList
+```js
+const VideoList = ({ videos }) => {
+    const renderedList = videos.map((video) => {
+        return <VideoItem video={video} />;
+    });
+    //props.videos
+    return <div className="ui relaxed divided list">{renderedList}</div>;
+}
+```
+- update VideoItem
+```js
+const VideoItem = ({ video }) => {
+    return (
+        <div className="item">
+            <img src={video.snippet.thumbnails.medium.url} />
+            {video.snippet.title}
+        </div>
+    );
+};
+```
+- we added two className
+- then we go down to looking for `Image` on Semantic UI
+![](img/2020-01-01-14-42-14.png)
+- view its source code
+- update VideoItem
+```js
+//Styling a List
+import React from 'react';
+import './VideoItem.css';
+
+const VideoItem = ({ video }) => {
+    return (
+        <div className="video-item item">
+            <img className="ui image" src={video.snippet.thumbnails.medium.url} />
+            <div className="content">
+                <div className="header">{video.snippet.title}</div>
+            </div>
+        </div>
+    );
+};
+export default VideoItem;
+```
+- create VideoItem.css
+```css
+.video-item{
+    display: flex !important;
+    align-items: center !important;
+    cursor: pointer;
+}
+
+.video-item img{
+    max-width: 180px;
+}
+```
+![](img/2020-01-01-15-19-49.png)
+---
+
+## Communicating from Child to Parent
+![](img/2020-01-01-15-22-00.png)
+![](img/2020-01-01-15-27-28.png)
+---
+
+## Deeply Nested Callbacks
+
+
+
+
