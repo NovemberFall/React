@@ -34,14 +34,120 @@
 
 
 
-//Reminder on Event Handlers
+// //Reminder on Event Handlers
+// import React from 'react';
+// import SearchBar from './SearchBar';
+// class App extends React.Component {
+//     render() {
+//         return (
+//             <div className="ui container">
+//                 <SearchBar />
+//             </div>
+//         );
+//     }
+// }
+// export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //Putting it ALL Together
+// import React from 'react';
+// import SearchBar from './SearchBar';
+// import youtube from '../apis/youtube';
+
+// class App extends React.Component {
+//     onTermSubmit = (term) => {
+//         youtube.get('/search', {
+//             params: {
+//                 q: term
+//             }
+//         });
+//     };
+
+//     render() {
+//         return (
+//             <div className="ui container">
+//                 <SearchBar onFormSubmit={this.onTermSubmit} />
+//             </div>
+//         );
+//     }
+// }
+// export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Updating State with Fetched Data
 import React from 'react';
 import SearchBar from './SearchBar';
+import youtube from '../apis/youtube';
+
 class App extends React.Component {
+    state = { videos: [] };
+
+    onTermSubmit = async (term) => {
+        const response = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+        // console.log(response);
+        this.setState({ videos: response.data.items });
+    };
+
     render() {
         return (
             <div className="ui container">
-                <SearchBar />
+                <SearchBar onFormSubmit={this.onTermSubmit} />
             </div>
         );
     }

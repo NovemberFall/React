@@ -192,4 +192,165 @@ export default SearchBar;
 
 ## Searching for Videos
 - google search `youtube api search`
-- 
+![](img/2020-01-01-10-22-51.png)
+- `GET https://www.googleapis.com/youtube/v3/search`
+- the base URL is : `https://www.googleapis.com/youtube/v3/`
+-
+- create youtube.js
+```js
+import axios from 'axios';
+const KEY = 'AIzaSyCKFtJ8pTpAqg2JVfyPMfUzMS-LKX9qr2E';
+export default axios.create({
+    baseURL: 'https://www.googleapis.com/youtube/v3/',
+    params: {
+        part: 'snippet',
+        maxResults: 5,
+        key: KEY
+    }
+});
+```
+- install axios
+- `npm install --save axios@0.18.1`
+---
+
+
+## Adding a Video Type
+- At some point in the course you may end up getting **Warning: Each child in a list should have a unique "key" prop** even after we add a key prop in the "Fixing a Few Warnings" lecture. To ensure that this is not an issue, we should add a type parameter to our axios config object to only search for videos.
+- update youtube.js
+```js
+import axios from 'axios';
+const KEY = 'AIzaSyCKFtJ8pTpAqg2JVfyPMfUzMS-LKX9qr2E';
+
+export default axios.create({
+    baseURL: 'https://www.googleapis.com/youtube/v3/',
+    params: {
+        part: 'snippet',
+        type: 'video',
+        maxResults: 5,
+        key: `${KEY}`
+    }
+});
+```
+---
+
+## Putting it ALL Together
+- update App
+```js
+//Putting it ALL Together
+import React from 'react';
+import SearchBar from './SearchBar';
+class App extends React.Component {
+    onTermSubmit = (term) => {
+        console.log(term);
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+            </div>
+        );
+    }
+}
+export default App;
+```
+-
+- update SearchBar
+```js
+// Putting it ALL Together
+import React from 'react';
+
+class SearchBar extends React.Component {
+    state = { term: '' }
+
+    onInputChange = (event) => {
+        this.setState({ term: event.target.value })
+    };
+
+    onFormSubmit = (event) => {
+        event.preventDefault();
+
+        //TODO: Make sure we call
+        //callback from parent component
+        this.props.onFormSubmit(this.state.term);
+    };
+
+    render() {
+        return (
+            <div className="search-bar ui segment">
+                <form onSubmit={this.onFormSubmit} className="ui form">
+                    <div className='field'>
+                        <label>Video Search</label>
+                        <input type="text"
+                            value={this.state.term}
+                            onChange={this.onInputChange}
+                        />
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
+export default SearchBar;
+```
+- Note: without `event.preventDefault();`, it can't print msg that you input
+![](img/2020-01-01-11-41-35.png)
+-
+- update App
+```js
+//Putting it ALL Together
+import React from 'react';
+import SearchBar from './SearchBar';
+import youtube from '../apis/youtube';
+
+class App extends React.Component {
+    onTermSubmit = (term) => {
+        youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+            </div>
+        );
+    }
+}
+export default App;
+```
+![](img/2020-01-01-12-44-56.png)
+![](img/2020-01-01-12-45-49.png)
+---
+
+## Updating State with Fetched Data
+- update App
+```js
+class App extends React.Component {
+    onTermSubmit = async (term) => {
+        const response = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+
+        console.log(response);
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+            </div>
+        );
+    }
+}
+```
+![](img/2020-01-01-12-52-07.png)
+
+
+
+
