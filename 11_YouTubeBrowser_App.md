@@ -596,6 +596,84 @@ export default VideoItem;
 ---
 
 ## Deeply Nested Callbacks
+- the idea is `Communicating from Child to Parent`
+- App using `this.state.value` to assign to children
+- update App.js
+```js
+//Deeply Nested Callbacks
+import React from 'react';
+import SearchBar from './SearchBar';
+import youtube from '../apis/youtube';
+import VideoList from './VideoList';
+
+class App extends React.Component {
+    state = { videos: [], selectedVideo: null };
+
+    onTermSubmit = async (term) => {
+        const response = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+        // console.log(response);
+        this.setState({ videos: response.data.items });
+    };
+
+    onVideoSelect = (video) => {
+        console.log('From the App!', video);
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+                <VideoList onVideoSelect={this.onVideoSelect} videos={this.state.videos} />
+            </div>
+        );
+    }
+}
+export default App;
+```
+- assign props.value `onVideoSelect={this.onVideoSelect}` to child `VideoList`
+- update VideoList
+```js
+//Deeply Nested Callbacks
+import React from 'react';
+import VideoItem from './VideoItem';
+
+const VideoList = ({ videos, onVideoSelect }) => {
+    const renderedList = videos.map((video) => {
+        return <VideoItem onVideoSelect={onVideoSelect} video={video} />;
+    });
+    //props.videos
+    return <div className="ui relaxed divided list">{renderedList}</div>;
+}
+export default VideoList;
+```
+- VideoList pass props to child `VideoItem`
+- VideoItem receive `onVideoSelect` from props
+- update VideoItem
+```js
+//Deeply Nested Callbacks
+import React from 'react';
+import './VideoItem.css';
+
+const VideoItem = ({ video, onVideoSelect }) => {
+    return (
+        <div onClick={() => { onVideoSelect(video) }} className="video-item item">
+            <img className="ui image" src={video.snippet.thumbnails.medium.url} />
+            <div className="content">
+                <div className="header">{video.snippet.title}</div>
+            </div>
+        </div>
+    );
+};
+export default VideoItem;
+```
+![](img/2020-01-01-15-57-59.png)
+---
+
+## Conditional Rendering
 
 
 
