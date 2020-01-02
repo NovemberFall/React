@@ -671,10 +671,192 @@ const VideoItem = ({ video, onVideoSelect }) => {
 export default VideoItem;
 ```
 ![](img/2020-01-01-15-57-59.png)
+![](img/2020-01-01-16-14-51.png)
+- **Remember! we passing props to child VideoList and down to VideoItem, then whenever a user clicked on a video item we invoked that callback which essentially sent some communication back to the app component**
 ---
 
 ## Conditional Rendering
+![](img/2020-01-01-17-26-04.png)
+- create VideoDetail.js
+```js
+//Conditional Rendering
+import React from 'react';
+const VideoDetail = ({ video }) => {
+    if (!video) {
+        return <div>Loading...</div>
+    }
+    return <div>{video.snippet.title}</div>
+}
+export default VideoDetail;
+```
+-
+- update App
+```js
+//Conditional Rendering
+import React from 'react';
+import SearchBar from './SearchBar';
+import youtube from '../apis/youtube';
+import VideoList from './VideoList';
+import VideoDetail from './VideoDetail';
+
+class App extends React.Component {
+    state = { videos: [], selectedVideo: null };
+
+    onTermSubmit = async (term) => {
+        const response = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
+        // console.log(response);
+        this.setState({ videos: response.data.items });
+    };
+
+    onVideoSelect = (video) => {
+        this.setState({ selectedVideo: video })
+    };
+
+    render() {
+        return (
+            <div className="ui container">
+                <SearchBar onFormSubmit={this.onTermSubmit} />
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList onVideoSelect={this.onVideoSelect} videos={this.state.videos} />
+            </div>
+        );
+    }
+}
+export default App;
+```
+![](img/2020-01-01-17-37-36.png)
+---
 
 
+## Styling the VideoDetail
+- update VideoDetail
+```js
+//Styling the VideoDetail
+import React from 'react';
+const VideoDetail = ({ video }) => {
+    if (!video) {
+        return <div>Loading...</div>
+    }
+    return (
+        <div>
+            <div className="ui segment">
+                <h4 className="ui header">{video.snippet.title}</h4>
+                <p>{video.snippet.description}</p>
+            </div>
+        </div>
+    );
+}
+export default VideoDetail;
+```
+![](img/2020-01-01-17-42-22.png)
+---
 
+## Displaying a Video Player
+- let's review diagram again
+![](img/2020-01-01-17-43-50.png)
+- go to youtube
+- find a vedio, and click `SHARE`
+![](img/2020-01-01-19-11-33.png)
+- click `Embed`
+![](img/2020-01-01-19-14-07.png)
+- update VideoDetail
+```js
+//Displaying a Video Player
+import React from 'react';
+const VideoDetail = ({ video }) => {
+    if (!video) {
+        return <div>Loading...</div>
+    }
 
+    const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}`
+    return (
+        <div>
+            <div className="ui embed">
+                <iframe src={videoSrc} />
+            </div>
+            <div className="ui segment">
+                <h4 className="ui header">{video.snippet.title}</h4>
+                <p>{video.snippet.description}</p>
+            </div>
+        </div>
+    );
+}
+export default VideoDetail;
+```
+![](img/2020-01-01-19-36-08.png)
+---
+
+## Fixing a Few Warnings
+![](img/2020-01-01-19-40-06.png)
+- update VideoDetail
+```js
+//Fixing a Few Warnings
+import React from 'react';
+const VideoDetail = ({ video }) => {
+    if (!video) {
+        return <div>Loading...</div>
+    }
+
+    const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}`
+    return (
+        <div>
+            <div className="ui embed">
+                <iframe title="video player" src={videoSrc} />
+            </div>
+            <div className="ui segment">
+                <h4 className="ui header">{video.snippet.title}</h4>
+                <p>{video.snippet.description}</p>
+            </div>
+        </div>
+    );
+}
+export default VideoDetail;
+```
+-
+- update VideoItem.js
+```js
+//Fixing a Few Warnings
+import React from 'react';
+import './VideoItem.css';
+
+const VideoItem = ({ video, onVideoSelect }) => {
+    return (
+        <div onClick={() => { onVideoSelect(video) }} className="video-item item">
+            <img alt={video.snippet.title} className="ui image" src={video.snippet.thumbnails.medium.url} />
+            <div className="content">
+                <div className="header">{video.snippet.title}</div>
+            </div>
+        </div>
+    );
+};
+export default VideoItem;
+```
+![](img/2020-01-01-19-53-18.png)
+- now we still have a warning in VideoList
+- update VideoList
+```js
+//Deeply Nested Callbacks
+import React from 'react';
+import VideoItem from './VideoItem';
+
+const VideoList = ({ videos, onVideoSelect }) => {
+    const renderedList = videos.map((video) => {
+        return <VideoItem key={video.id.videoId} onVideoSelect={onVideoSelect} video={video} />;
+    });
+    //props.videos
+    return <div className="ui relaxed divided list">{renderedList}</div>;
+}
+export default VideoList;
+```
+![](img/2020-01-01-19-59-35.png)
+- there is no warnning
+-
+- now we try to list other videos on right hand side
+![](img/2020-01-01-20-02-45.png)
+-
+- import semantic UI's Grid
+![](img/2020-01-01-20-04-21.png)
