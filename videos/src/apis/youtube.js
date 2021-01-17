@@ -1,52 +1,52 @@
+// import axios from 'axios';
+// const KEY = 'this is an example';
+
+// export default axios.create({
+//     baseURL: 'https://www.googleapis.com/youtube/v3/',
+//     params: {
+//         part: 'snippet',
+//         maxResults: 5,
+//         key: KEY
+//     }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import axios from 'axios';
-const KEY = 'this is an example';
-
-export default axios.create({
-    baseURL: 'https://www.googleapis.com/youtube/v3/',
-    params: {
-        part: 'snippet',
-        maxResults: 5,
-        key: KEY
-    }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import axios from 'axios';
-const KEY = 'AIzaSyAeNLo14Hf8a5pQXoFMFTCjbwvfvBkSJBU';
+const KEY = 'example';
 
 //other person's api, but it can work
-// const KEY = 'AIzaSyBXAyimeyDQaq0xckMpjEG4NzYGJR_XTbg';
+// const KEY = 'example';
 
 export default axios.create({
     baseURL: 'https://www.googleapis.com/youtube/v3/',
